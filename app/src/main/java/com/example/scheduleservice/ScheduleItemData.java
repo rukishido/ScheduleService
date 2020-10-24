@@ -22,7 +22,7 @@ public class ScheduleItemData {
         return fileName;
     }
 
-    public String getFileLinks() {
+    public String getFileLink() {
         return fileLink;
     }
 }

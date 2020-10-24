@@ -1,8 +1,14 @@
 package com.example.scheduleservice;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.view.View;
+import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,21 +39,10 @@ public class ScheduleDataTask extends AsyncTask<Void,Void,ArrayList<ScheduleItem
                 String categoryName = section.getElementsByClass("col-lg-10").get(0).text(); // заголовки секций
                 Elements scheduleFiles = section.getElementsByClass("col-xs-12 col-sm-6"); // файлы внутри секции
                 for (Element i : scheduleFiles) {
-                   String scheduleFileLink = i.getElementsByTag("a").get(0).attr("href");
-                    String scheduleFileName = i.getElementsByClass("file-name").get(0).text();
+                   String scheduleFileLink = i.getElementsByTag("a").get(0).attr("href"); //ссылка на файл
+                    String scheduleFileName = i.getElementsByClass("file-name").get(0).text().replace("Расписание занятий на ",""); //название файла
                     scheduleItemDataList.add(new ScheduleItemData(categoryName, scheduleFileName, scheduleFileLink));
                 }
-
-
-//                String categoryName = section.getElementsByClass("col-lg-10").get(0).text(); // заголовки секций
-//                Elements scheduleFiles = section.getElementsByClass("col-xs-12 col-sm-6"); // файлы внутри секции
-//                for (Element i : scheduleFiles) {
-//                    tempScheduleFileLinks.add(i.getElementsByTag("a").get(0).attr("href"));
-//                    tempScheduleFileNames.add(i.getElementsByClass("file-name").get(0).text());
-//                }
-//                scheduleItemDataList.add(new ScheduleItemData(categoryName, tempScheduleFileNames, tempScheduleFileLinks));
-//                tempScheduleFileLinks.clear();
-//                tempScheduleFileNames.clear();
             }
 
 
@@ -61,5 +56,17 @@ public class ScheduleDataTask extends AsyncTask<Void,Void,ArrayList<ScheduleItem
     protected void onPostExecute(ArrayList<ScheduleItemData> scheduleItemData) {
         super.onPostExecute(scheduleItemData);
         listView.setAdapter(new ScheduleDataAdapter(mContext,R.layout.schedule_item, scheduleItemData));
+        listView.setClickable(true);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ScheduleItemData item = (ScheduleItemData)parent.getItemAtPosition(position);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse("https://ci.nsu.ru" + item.getFileLink()),"application/pdf");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                mContext.startActivity(intent);
+
+            }
+        });
     }
 }

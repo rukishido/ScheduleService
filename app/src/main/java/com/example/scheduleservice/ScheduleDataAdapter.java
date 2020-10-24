@@ -42,4 +42,10 @@ public class ScheduleDataAdapter extends ArrayAdapter<ScheduleItemData> {
         return view;
         //return super.getView(position, convertView, parent);
     }
+
+    @Nullable
+    @Override
+    public ScheduleItemData getItem(int position) {
+        return scheduleItemDataList.get(position);
+    }
 }
