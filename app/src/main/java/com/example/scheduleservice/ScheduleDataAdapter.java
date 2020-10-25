@@ -13,8 +13,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 public class ScheduleDataAdapter extends ArrayAdapter<ScheduleItemData> {
-    Context mContext;
-    ArrayList<ScheduleItemData> scheduleItemDataList = new ArrayList<ScheduleItemData>();
+    ArrayList<ScheduleItemData> scheduleItemDataList;
 
 
 
